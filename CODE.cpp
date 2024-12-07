@@ -279,3 +279,30 @@ public:
             delete current;
         }
     }
+ void addAllEdges()
+    {
+        string **data;
+        int cols = 3;
+        CSVReader reader;
+        int rows = reader.calculateRows("road_network.csv");
+        reader.readCSV("road_network.csv", data, cols);
+
+        if (rows > 1)
+        {
+            for (int i = 1; i < rows; i++)
+            {
+                string start = data[i][0];
+                string end = data[i][1];
+                int time = stoi(data[i][2]);
+
+                addEdge(start, end, time);
+            }
+        }
+
+        // delete the data array
+        for (int i = 0; i < rows; i++)
+        {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
