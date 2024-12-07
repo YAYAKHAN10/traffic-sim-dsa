@@ -800,4 +800,57 @@ void blockRoadsDueToAccident()
         roadNetwork.allPossiblePath(string(1, start), string(1, end));
 
     }
+ void run()
+    {
+        setup();
+        bool terminate = false;
+        while (!terminate)
+        {
+            cout << endl
+                 << "------ Simulation Dashboard ------" << endl;
+            cout << "1. Display City Traffic Network" << endl;
+            cout << "2. Display Traffic Signal Status" << endl;
+            cout << "3. Display Congestion Status" << endl;
+            cout << "4. Display Blocked Roads" << endl;
+            cout << "5. Handle Emergency Vehicle Routing" << endl;
+            cout << "6. Block Roads due to Accident" << endl;
+            cout << "7. Simulate Vehicle Routing" << endl;
+            cout << "8. Exit Simulation" << endl;
+            cout << "Enter your choice: ";
 
+            int choice;
+            cin >> choice;
+            cout << endl;
+
+            switch (choice)
+            {
+            case 1:
+                displayRoadNetwork();
+                break;
+            case 2:
+                displayTrafficSignalStatus();
+                break;
+            case 3:
+                break;
+            case 4:
+                displayBlockedRoads();
+                break;
+            case 5:
+                handleEmergencyVehicleRouting();
+                break;
+            case 6:
+                blockRoadsDueToAccident();
+                break;
+            case 7:
+                simulateVehicleRouting();
+                break;
+            case 8:
+                terminate = true;
+                cout << "Exiting simulation..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+            }
+        }
+    }
+};
