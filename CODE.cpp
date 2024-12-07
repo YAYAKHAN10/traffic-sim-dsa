@@ -458,3 +458,27 @@ public:
             startNode = startNode->next;
         }
     }
+ void allPossiblePath(string start, string end)
+    {
+    }
+
+    void display()
+    {
+        AdjacencyList *startNode = graph;
+
+        cout << "------ City Traffic Network ------" << endl;
+
+        while (startNode)
+        {
+            cout << startNode->start << " -> ";
+            Node *temp = startNode->head;
+            while (temp)
+            {
+                cout << "(" << temp->end << ", " << temp->time << ") ";
+                temp = temp->next;
+            }
+            cout << endl;
+            startNode = startNode->next;
+        }
+    } 
+};
