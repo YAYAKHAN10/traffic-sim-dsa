@@ -143,3 +143,22 @@ public:
         return elapsed_seconds.count() > seconds;
     }
 };
+
+class roadNetwork
+{
+    // store the list of destinations and time from the start point
+    struct Node
+    {
+        string end;
+        int time;
+        string status;
+        Node *next;
+    };
+
+    // store the start point and the pointing to the list of destinations
+    struct AdjacencyList
+    {
+        string start;
+        Node *head;
+        AdjacencyList *next;
+    };
