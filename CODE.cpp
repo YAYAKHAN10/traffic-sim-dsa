@@ -162,3 +162,75 @@ class roadNetwork
         Node *head;
         AdjacencyList *next;
     };
+ void addEdge(const string &start, const string &end, int time)
+    {
+        AdjacencyList *startNode = graph;
+        AdjacencyList *prevStartNode = NULL;
+
+        while (startNode != NULL && startNode->start != start)
+        {
+            prevStartNode = startNode;
+            startNode = startNode->next;
+        }
+
+        // If the start point is not in the graph, add it
+        if (!startNode)
+        {
+            startNode = new AdjacencyList;
+            startNode->start = start;
+            startNode->head = NULL;
+            startNode->next = NULL;
+
+            if (prevStartNode)
+            {
+                prevStartNode->next = startNode;
+            }
+            else
+            {
+                graph = startNode;
+            }
+        }
+
+        // Add the destination to the list of destinations
+        Node *newNode = new Node;
+        newNode->end = end;
+        newNode->time = time;
+        newNode->next = startNode->head;
+        startNode->head = newNode;
+
+        // Now add the edge from end to start (to make it undirected)
+        AdjacencyList *endNode = graph;
+        AdjacencyList *prevEndNode = NULL;
+
+        // Check if the end point is already in the graph
+        while (endNode != NULL && endNode->start != end)
+        {
+            prevEndNode = endNode;
+            endNode = endNode->next;
+        }
+
+        // If the end point is not in the graph, add it
+        if (!endNode)
+        {
+            endNode = new AdjacencyList;
+            endNode->start = end;
+            endNode->head = NULL;
+            endNode->next = NULL;
+
+            if (prevEndNode)
+            {
+                prevEndNode->next = endNode;
+            }
+            else
+            {
+                graph = endNode;
+            }
+        }
+
+        // Add the destination to the list of destinations (reverse direction)
+        Node *newNodeReverse = new Node;
+        newNodeReverse->end = start;
+        newNodeReverse->time = time;
+        newNodeReverse->next = endNode->head;
+        endNode->head = newNodeReverse;
+    }
