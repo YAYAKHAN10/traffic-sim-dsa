@@ -530,6 +530,11 @@ public:
     }
 };
 
+
+class EmergencyVehicle : public Vehicle
+{
+};
+
 class Simulation
 {
     CSVReader reader;
@@ -576,4 +581,19 @@ public:
                 roadNetwork.addStatus(start, end, status);
             }
         }
+    }
+
+void displayRoadNetwork()
+    {
+        roadNetwork.display();
+    }
+
+    void displayTrafficSignalStatus()
+    {
+       
+        
+    }
+
+    void displayCongestionStatus()
+    {
     }
