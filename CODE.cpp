@@ -597,3 +597,26 @@ void displayRoadNetwork()
     void displayCongestionStatus()
     {
     }
+
+ void displayBlockedRoads()
+    {
+        string **data;
+        CSVReader reader;
+        int cols = 3;
+        int rows = reader.calculateRows("road_closures.csv");
+        reader.readCSV("road_closures.csv", data, cols);
+
+        cout << "------ Blocked Roads ------" << endl;
+        for (int i = 1; i < rows; i++)
+        {
+            if (data[i][2] == "Blocked")
+                cout << data[i][0] << " to " << data[i][1] << " is blocked." << endl;
+        }
+
+        // delete the data array
+        for (int i = 0; i < rows; i++)
+        {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
