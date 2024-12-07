@@ -234,3 +234,48 @@ class roadNetwork
         newNodeReverse->next = endNode->head;
         endNode->head = newNodeReverse;
     }
+string returnStatus(string start, string end)
+    {
+        AdjacencyList *startNode = graph;
+
+        while (startNode)
+        {
+            if (startNode->start == start)
+            {
+                Node *temp = startNode->head;
+                while (temp)
+                {
+                    if (temp->end == end)
+                    {
+                        return temp->status;
+                    }
+                    temp = temp->next;
+                }
+            }
+            startNode = startNode->next;
+        }
+
+        return "";
+    }
+
+public:
+    roadNetwork() : graph(NULL) {}
+
+    ~roadNetwork()
+    {
+        while (graph)
+        {
+            AdjacencyList *current = graph;
+            graph = graph->next;
+
+            Node *adj = current->head;
+            while (adj)
+            {
+                Node *temp = adj;
+                adj = adj->next;
+                delete temp;
+            }
+
+            delete current;
+        }
+    }
