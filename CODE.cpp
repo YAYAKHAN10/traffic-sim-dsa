@@ -788,3 +788,16 @@ void blockRoadsDueToAccident()
         }
         delete[] data;
     }
+ void simulateVehicleRouting()
+    {
+        cout<<"Simulating Vehicle Routing..."<<endl;
+        cout<<"Enter the Starting Intersection: ";
+        char start;
+        cin>>start;
+        cout<<"Enter the Ending Intersection: ";
+        char end;
+        cin>>end;
+        roadNetwork.allPossiblePath(string(1, start), string(1, end));
+
+    }
+
