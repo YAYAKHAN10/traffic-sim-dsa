@@ -529,3 +529,51 @@ public:
         this->path = path;
     }
 };
+
+class Simulation
+{
+    CSVReader reader;
+    roadNetwork roadNetwork;
+    Vehicle *vehicle;
+
+public:
+    Simulation()
+    {
+        roadNetwork.setup();
+    }
+
+    void addVehicle()
+    {
+        vehicle->setupVehicle(vehicle);
+    }
+
+    void setup()
+    {
+        addVehicle();
+
+        // add path of each vehicle
+        for (int i = 0; i < 30; i++)
+        {
+            string tempPath = "";
+            tempPath = roadNetwork.dijkstra(vehicle[i].start, vehicle[i].end);
+            vehicle[i].addpath(tempPath);
+        }
+
+        // add status of each road
+        string **data;
+        int cols = 3;
+        int rows = reader.calculateRows("road_closures.csv");
+        reader.readCSV("road_closures.csv", data, cols);
+
+        if (rows > 1)
+        {
+            for (int i = 1; i < rows; i++)
+            {
+                string start = data[i][0];
+                string end = data[i][1];
+                string status = data[i][2];
+
+                roadNetwork.addStatus(start, end, status);
+            }
+        }
+    }
