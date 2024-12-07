@@ -306,3 +306,34 @@ public:
         }
         delete[] data;
     }
+
+ void setup()
+    {
+        addAllEdges();
+
+        // setupTrafficSignal(signal);
+    }
+
+    bool checkVertexLink(string start, string end)
+    {
+        AdjacencyList *startNode = graph;
+
+        while (startNode)
+        {
+            if (startNode->start == start)
+            {
+                Node *temp = startNode->head;
+                while (temp)
+                {
+                    if (temp->end == end)
+                    {
+                        return true;
+                    }
+                    temp = temp->next;
+                }
+            }
+            startNode = startNode->next;
+        }
+
+        return false;
+    }
