@@ -620,3 +620,45 @@ void displayRoadNetwork()
         }
         delete[] data;
     }
+
+ void handleEmergencyVehicleRouting()
+    {
+        cout << "Enter Start and End intersection for the Emergency Vehicle: ";
+        char start, end;
+        cin >> start >> end;
+
+        // ensure start and end are uppercase letters
+        if (start >= 'a' && start <= 'z')
+        {
+            start = start - 32;
+        }
+
+        if (end >= 'a' && end <= 'z')
+        {
+            end = end - 32;
+        }
+
+        // validate input
+        if (start < 'A' || start > 'Z' || end < 'A' || end > 'Z')
+        {
+            cout << "Invalid input. Please enter valid intersections." << endl;
+            return;
+        }
+
+        string path = roadNetwork.dijkstra(string(1, start), string(1, end));
+
+        if (path.empty())
+        {
+            cout << "No path found between " << start << " and " << end << endl;
+        }
+        else
+        {
+            cout<<"Emergency Vehicle Path: ";
+            for (int i=0; i<path.length()-1; i++)
+            {
+                cout<< path[i] <<" -> ";
+            }
+            cout<<path[path.length()-1];
+        }
+
+    }
