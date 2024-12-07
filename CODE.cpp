@@ -337,3 +337,101 @@ public:
 
         return false;
     }
+
+ string dijkstra(string start, string end)
+    {
+        int numberofVertex = 26;
+
+        // Initialize arrays for distances, previous nodes, and visited status
+        int distance[numberofVertex];
+        int previous[numberofVertex];
+        bool visited[numberofVertex];
+
+        for (int i = 0; i < numberofVertex; i++)
+        {
+            distance[i] = 999;  // Used as infinity
+            previous[i] = -1;   // No previous node
+            visited[i] = false; // All not visited
+        }
+
+        int startIndex = start[0] - 'A';
+        int endIndex = end[0] - 'A';
+
+        distance[startIndex] = 0;
+
+        // Dijkstra's algorithm
+        for (int count = 0; count < numberofVertex; count++)
+        {
+            // Find the unvisited node with the smallest distance
+            int minDistance = 999;
+            int minIndex = -1;
+
+            for (int i = 0; i < numberofVertex; i++)
+            {
+                if (!visited[i] && distance[i] < minDistance)
+                {
+                    minDistance = distance[i];
+                    minIndex = i;
+                }
+            }
+
+            // If no node is found, break
+            if (minIndex == -1)
+                break;
+
+            // Mark the node as visited
+            visited[minIndex] = true;
+
+            // Update distances for neighbors
+            AdjacencyList *startNode = graph;
+            while (startNode)
+            {
+                if (startNode->start[0] - 'A' == minIndex)
+                {
+                    Node *temp = startNode->head;
+                    while (temp)
+                    {
+                        // Check if the road is blocked
+                        if (temp->status == "Blocked")
+                        {
+                            temp = temp->next;
+                            continue; // Skip this edge if it's blocked
+                        }
+
+                        int neighborIndex = temp->end[0] - 'A';
+                        int newDistance = distance[minIndex] + temp->time;
+
+                        // If a shorter path is found
+                        if (newDistance < distance[neighborIndex])
+                        {
+                            distance[neighborIndex] = newDistance;
+                            previous[neighborIndex] = minIndex;
+                        }
+                        temp = temp->next;
+                    }
+                }
+                startNode = startNode->next;
+            }
+        }
+
+        // Reconstruct the path
+        string path = "";
+        int at = endIndex;
+
+        // Construct the path from destination to source
+        while (at != -1)
+        {
+            path += char(at + 'A');
+            at = previous[at];
+        }
+        // Output the result
+        if (distance[endIndex] < 999)
+        {
+            reverse(path.begin(), path.end()); // Reverse the path to get it from start to end
+            return path;
+        }
+        else
+        {
+            return "";
+        }
+    }
