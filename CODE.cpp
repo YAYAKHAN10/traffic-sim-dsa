@@ -482,3 +482,50 @@ public:
         }
     } 
 };
+
+class Vehicle
+{
+
+public:
+    string id;
+    string start;
+    string currentPosition;
+    string end;
+    Timer timer;
+    string path;
+
+    Vehicle() : id(""), start(""), end(""), path("") {}
+
+    void setupVehicle(Vehicle *&vehicle)
+    {
+        string **data;
+        CSVReader reader;
+        int cols = 3;
+        int rows = reader.calculateRows("vehicles.csv");
+        reader.readCSV("vehicles.csv", data, cols);
+
+        // Allocate memory for vehicle array
+        vehicle = new Vehicle[rows - 1];
+
+        // Add vehicles to the array
+        for (int i = 1; i < rows; i++)
+        {
+            vehicle[i - 1].id = data[i][0];
+            vehicle[i - 1].start = data[i][1];
+            vehicle[i - 1].currentPosition = data[i][1];
+            vehicle[i - 1].end = data[i][2];
+        }
+
+        // delete the data array
+        for (int i = 0; i < rows; i++)
+        {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
+
+    void addpath(string path)
+    {
+        this->path = path;
+    }
+};
