@@ -662,3 +662,129 @@ void displayRoadNetwork()
         }
 
     }
+
+void blockRoadsDueToAccident()
+    {
+        string **data;
+        CSVReader reader;
+        int cols = 3;
+        int rows = reader.calculateRows("road_closures.csv");
+        reader.readCSV("road_closures.csv", data, cols);
+
+        bool isEdge = false;
+
+        while (!isEdge)
+        {
+            cout << "Enter the Road you want to block (start, end): ";
+            char start, end;
+            cin >> start >> end;
+
+            // ensure start and end are uppercase letters
+            if (start >= 'a' && start <= 'z')
+            {
+                start = start - 32;
+            }
+            if (end >= 'a' && end <= 'z')
+            {
+                end = end - 32;
+            }
+
+            // validate input
+            if (start < 'A' || start > 'Z' || end < 'A' || end > 'Z')
+            {
+                cout << "Invalid input. Please enter valid intersections." << endl;
+                continue;
+            }
+
+            // check if the road exists in the road network
+            isEdge = roadNetwork.checkVertexLink(string(1, start), string(1, end));
+            if (!isEdge)
+            {
+                cout << "The road does not exist. Please try again." << endl;
+                continue;
+            }
+
+            bool alreadyUpdated = false;
+
+            // check if the road is already in the CSV
+            for (int i = 1; i < rows; i++)
+            {
+                if (data[i][0] == string(1, start) && data[i][1] == string(1, end))
+                {
+                    if (data[i][2] == "Blocked")
+                    {
+                        cout << "The road is already blocked." << endl;
+                        isEdge = false;
+                    }
+                    else if (data[i][2] == "Clear" || data[i][2] == "UnderRepair")
+                    {
+                        data[i][2] = "Blocked";
+                        cout << "Blocking Road...." << endl;
+                        alreadyUpdated = true;
+                    }
+                    break;
+                }
+            }
+
+            if (!alreadyUpdated)
+            {
+                // adding a new entry in data array
+                if (isEdge)
+                {
+                    rows++;
+                    string **newData = new string *[rows];
+
+                    // Deep copy of the old data to newData
+                    for (int i = 0; i < rows - 1; ++i)
+                    {
+                        newData[i] = new string[3];
+                        newData[i][0] = data[i][0];
+                        newData[i][1] = data[i][1];
+                        newData[i][2] = data[i][2];
+                    }
+
+                    // Adding the new entry
+                    newData[rows - 1] = new string[3];
+                    newData[rows - 1][0] = string(1, start);
+                    newData[rows - 1][1] = string(1, end);
+                    newData[rows - 1][2] = "Blocked";
+
+                    // Deleting the old data to avoid memory leak
+                    for (int i = 0; i < rows - 1; ++i)
+                    {
+                        delete[] data[i];
+                    }
+                    delete[] data;
+
+                    // Assigning newData to data
+                    data = newData;
+
+                    cout << "Blocking Road...." << endl;
+                }
+            }
+
+            // set road status to blocked in graph
+            roadNetwork.addStatus(string(1, start), string(1, end), "Blocked");
+
+            // write to CSV file
+            ofstream file("road_closures.csv");
+            if (!file.is_open())
+            {
+                cout << "Error opening file!" << endl;
+                return;
+            }
+            for (int i = 0; i < rows; i++)
+            {
+                file << data[i][0] << "," << data[i][1] << "," << data[i][2] << endl;
+            }
+
+            file.close();
+        }
+
+        // delete the data array
+        for (int i = 0; i < rows; ++i)
+        {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
