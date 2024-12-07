@@ -435,3 +435,26 @@ public:
             return "";
         }
     }
+
+ void addStatus(string start, string end, string status)
+    {
+        AdjacencyList *startNode = graph;
+
+        while (startNode)
+        {
+            if (startNode->start == start)
+            {
+                Node *temp = startNode->head;
+                while (temp)
+                {
+                    if (temp->end == end)
+                    {
+                        temp->status = status;
+                        break;
+                    }
+                    temp = temp->next;
+                }
+            }
+            startNode = startNode->next;
+        }
+    }
