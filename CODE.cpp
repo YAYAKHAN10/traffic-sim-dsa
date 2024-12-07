@@ -122,3 +122,24 @@ public:
         file.close();
     }
 };
+
+class Timer
+{
+public:
+    chrono::steady_clock::time_point start_time;
+
+    void start()
+    {
+        start_time = chrono::steady_clock::now();
+    }
+
+    bool isTimeout(int seconds)
+    {
+        chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
+        chrono::duration<double> elapsed_seconds = chrono::duration_cast<chrono::duration<double> >(end_time - start_time);
+
+        cout<<elapsed_seconds.count()<<endl;
+
+        return elapsed_seconds.count() > seconds;
+    }
+};
