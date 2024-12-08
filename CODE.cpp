@@ -755,11 +755,41 @@ public:
         this->path = path;
     }
 };
-
-
 class EmergencyVehicle : public Vehicle
 {
+    string priority;
+
+public:
+    EmergencyVehicle() : priority("") {}
+
+    void setupEmergencyVehicle(EmergencyVehicle *&vehicle)
+    {
+        string **data;
+        CSVReader reader;
+        int cols = 4;
+        int rows = reader.calculateRows("emergency_vehicles.csv");
+        reader.readCSV("emergency_vehicles.csv", data, cols);
+
+        vehicle = new EmergencyVehicle[rows - 1];
+
+        for (int i = 1; i < rows; i++)
+        {
+            vehicle[i - 1].id = data[i][0];
+            vehicle[i - 1].start = data[i][1];
+            vehicle[i - 1].end = data[i][2];
+            vehicle[i - 1].priority = data[i][3];
+        }
+
+        // Cleanup
+        for (int i = 0; i < rows; i++)
+        {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
 };
+
+
 
 class Simulation
 {
