@@ -2,6 +2,13 @@
 #include <fstream>
 #include <chrono>
 using namespace std;
+struct Intersection {
+    string roadSegment;
+    int vehicleCount;
+
+    Intersection() : roadSegment(""), vehicleCount(0) {}
+    Intersection(string name, int count) : roadSegment(name), vehicleCount(count) {}
+};
 
 class Stack
 {
