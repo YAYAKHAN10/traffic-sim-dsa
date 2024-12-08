@@ -17,7 +17,63 @@ private:
     int parent(int i) { return (i - 1) / 2; }
     int left(int i) { return 2 * i + 1; }
     int right(int i) { return 2 * i + 2; }
+ void heapifyDown(int i) {
+        int largest = i;
+        int l = left(i);
+        int r = right(i);
 
+        if (l < size && heap[l].vehicleCount > heap[largest].vehicleCount)
+            largest = l;
+        if (r < size && heap[r].vehicleCount > heap[largest].vehicleCount)
+            largest = r;
+
+        if (largest != i) {
+            swap(heap[i], heap[largest]);
+            heapifyDown(largest);
+        }
+    }
+
+    void heapifyUp(int i) {
+        while (i > 0 && heap[parent(i)].vehicleCount < heap[i].vehicleCount) {
+            swap(heap[i], heap[parent(i)]);
+            i = parent(i);
+        }
+    }
+
+public:
+    MaxHeap() : size(0) {}
+
+    void insert(string roadSegment, int vehicleCount) {
+        if (size == 100) {
+            cout << "Heap is full. Cannot insert.\n";
+            return;
+        }
+
+        heap[size] = Intersection(roadSegment, vehicleCount);
+        heapifyUp(size);
+        size++;
+    }
+
+    Intersection extractMax() {
+        if (size == 0) {
+            cout << "Heap is empty.\n";
+            return Intersection();
+        }
+
+        Intersection maxItem = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        heapifyDown(0);
+
+        return maxItem;
+    }
+
+    void display() {
+        for (int i = 0; i < size; i++) {
+            cout << heap[i].roadSegment << " -> Vehicles: " << heap[i].vehicleCount << endl;
+        }
+    }
+};
 
 class Stack
 {
