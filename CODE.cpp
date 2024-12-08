@@ -9,6 +9,15 @@ struct Intersection {
     Intersection() : roadSegment(""), vehicleCount(0) {}
     Intersection(string name, int count) : roadSegment(name), vehicleCount(count) {}
 };
+class MaxHeap {
+private:
+    Intersection heap[41];
+    int size;
+
+    int parent(int i) { return (i - 1) / 2; }
+    int left(int i) { return 2 * i + 1; }
+    int right(int i) { return 2 * i + 2; }
+
 
 class Stack
 {
