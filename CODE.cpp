@@ -74,6 +74,101 @@ public:
         }
     }
 };
+class TrafficHashTable
+{
+private:
+    static const int TABLE_SIZE = 41;
+    struct RoadData
+    {
+        string roadSegment;
+        int vehicleCount;
+        bool isOccupied;
+    };
+
+    RoadData hashTable[TABLE_SIZE];
+
+    // hash function
+    int hashFunction(string roadSegment)
+    {
+        int hash = 0;
+        for (char c : roadSegment)
+        {
+            hash = (hash + c) % TABLE_SIZE;
+        }
+        return hash;
+    }
+
+public:
+    TrafficHashTable()
+    {
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            hashTable[i].isOccupied = false;
+        }
+    }
+
+    // insert or update vehicle count (-ve value of count to remove vehicles)
+    void updateVehicleCount(string roadSegment, int count)
+    {
+        int index = hashFunction(roadSegment);
+        while (hashTable[index].isOccupied && hashTable[index].roadSegment != roadSegment)
+        {
+            index = (index + 1) % TABLE_SIZE; 
+        }
+
+        if (!hashTable[index].isOccupied)
+        {
+            // initilize if empty
+            hashTable[index].roadSegment = roadSegment;
+            hashTable[index].vehicleCount = 0;
+            hashTable[index].isOccupied = true;
+        }
+
+        // update count
+        hashTable[index].vehicleCount += count;
+
+        // ensure count is not -ve
+        if (hashTable[index].vehicleCount < 0)
+        {
+            hashTable[index].vehicleCount = 0;
+        }
+    }
+
+    void displayCongestionStatus()
+    {
+        cout << "------ Congestion Status ------" << endl;
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            if (hashTable[i].isOccupied)
+            {
+                cout << hashTable[i].roadSegment << " -> Vehicles: "
+                     << hashTable[i].vehicleCount << endl;
+            }
+        }
+    }
+
+    // Display roads that are congested (exceeding the threshold)
+    void displayCongestedRoads(int threshold)
+    {
+        cout << "------ Congested Roads ------" << endl;
+        for (int i = 0; i < TABLE_SIZE; ++i)
+        {
+            if (hashTable[i].isOccupied && hashTable[i].vehicleCount > threshold)
+            {
+                cout << hashTable[i].roadSegment << " -> Vehicles: "
+                     << hashTable[i].vehicleCount << endl;
+            }
+        }
+    }
+
+    void loadToHeap(MaxHeap &heap) {
+        for (int i = 0; i < TABLE_SIZE; ++i) {
+            if (hashTable[i].isOccupied) {
+                heap.insert(hashTable[i].roadSegment, hashTable[i].vehicleCount);
+            }
+        }
+    }
+};
 
 class Stack
 {
