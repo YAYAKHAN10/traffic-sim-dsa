@@ -290,24 +290,34 @@ public:
     }
 };
 
-class Timer
+class Stopwatch
 {
-public:
-    chrono::steady_clock::time_point start_time;
+private:
+    std::chrono::steady_clock::time_point start_time;
 
-    void start()
+public:
+    Stopwatch()
     {
-        start_time = chrono::steady_clock::now();
+        reset();
     }
 
-    bool isTimeout(int seconds)
+    void reset()
     {
-        chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
-        chrono::duration<double> elapsed_seconds = chrono::duration_cast<chrono::duration<double> >(end_time - start_time);
+        start_time = std::chrono::steady_clock::now();
+    }
 
-        cout<<elapsed_seconds.count()<<endl;
+    bool hasTimePassed(int seconds) const
+    {
+        auto current_time = std::chrono::steady_clock::now();
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time);
+        return elapsed_time.count() >= seconds;
+    }
 
-        return elapsed_seconds.count() > seconds;
+    int elapsedSeconds() const
+    {
+        auto current_time = std::chrono::steady_clock::now();
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time);
+        return elapsed_time.count();
     }
 };
 
@@ -602,6 +612,55 @@ public:
             return "";
         }
     }
+ void DFSpath(string start, string end, bool visited[], string path, int time)
+    {
+        visited[start[0] - 'A'] = true;
+        path += start;
+
+        if (start == end)
+        {
+            cout << "Path: ";
+
+            for (int i = 0; i < path.length() - 1; i++)
+            {
+                cout << path[i] << "  ";
+            }
+
+            cout << "| " << time << endl;
+        }
+        else
+        {
+            AdjacencyList *startNode = graph;
+            while (startNode)
+            {
+                if (startNode->start == start)
+                {
+                    Node *temp = startNode->head;
+                    while (temp)
+                    {
+                        if (!visited[temp->end[0] - 'A'])
+                        {
+                            DFSpath(temp->end, end, visited, path, time + temp->time);
+                        }
+                        temp = temp->next;
+                    }
+                }
+                startNode = startNode->next;
+            }
+        }
+
+        path.pop_back();
+        visited[start[0] - 'A'] = false;
+    }
+
+    void allPossiblePath(string start, string end)
+    {
+        bool *visited = new bool[26];
+        string path = "";
+        int time = 0;
+        DFSpath(start, end, visited, path, time);
+    }
+
 
  void addStatus(string start, string end, string status)
     {
