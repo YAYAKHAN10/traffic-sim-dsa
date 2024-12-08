@@ -789,7 +789,33 @@ public:
     }
 };
 
+class TrafficLight {
+private:
+    string currentColor;
+    Stopwatch stopwatch;
+    int greenDuration;
+    int redDuration;
 
+public:
+    TrafficLight(int green, int red)
+        : currentColor("Red"), greenDuration(green), redDuration(red) {
+        stopwatch.reset();
+    }
+
+    void update() {
+        if (currentColor == "Red" && stopwatch.hasTimePassed(redDuration)) {
+            currentColor = "Green";
+            stopwatch.reset();
+        } else if (currentColor == "Green" && stopwatch.hasTimePassed(greenDuration)) {
+            currentColor = "Red";
+            stopwatch.reset();
+        }
+    }
+
+    string getCurrentColor() const {
+        return currentColor;
+    }
+};
 
 class Simulation
 {
