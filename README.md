@@ -95,9 +95,75 @@ The algorithm finds the best path from the vehicle’s starting point to its des
 This calculated path is then assigned to the vehicle.
 *Updating Road Status: The setup() method also reads road status information from another CSV file, road_closures.csv, which provides data on which roads are blocked or open.
 It updates the road network with this information by calling the addStatus() function in the roadNetwork class.
+
+## Module4: Congestion Monitoring
+ ## Key Components
+## 1. Intersection Struct:
+Purpose: Represents a road segment with its name and the number of vehicles on it.
+Attributes:
+roadSegment: Name of the road segment.
+vehicleCount: Current count of vehicles on that road.
+## 2. MaxHeap Class:
+Purpose: Maintains a max-heap data structure to prioritize roads based on vehicle count (to identify the most congested roads).
+Attributes:
+heap[41]: An array of Intersection objects to store the heap elements.
+size: Tracks the current number of elements in the heap.
+Helper Functions:
+## parent(int i): Returns the index of the parent node for a given index.
+## left(int i): Returns the index of the left child for a given node.
+## right(int i): Returns the index of the right child for a given node.
+## for heapify down:
+   # 1: Compares the node at index i with its left and right children.
+   # 2: Finds the largest value among i, left child, and right child.
+   # 3: If i is not the largest, it swaps i with the largest child and recursively calls heapifyDown for the affected child.
+## For heapify-up:
+   # 1: Compares the element at i with its parent.
+   # 2: If the parent's vehicle count is smaller, the element swaps with its parent.
+   # 3: Repeats until the element is at the correct position or reaches the root.
+The MaxHeap efficiently identifies the most congested roads in the network, allowing traffic rerouting algorithms (DFS) to focus on resolving congestion on these roads.
+# TrafficHashTable Class Explanation
+The TrafficHashTable class is designed to monitor and manage traffic congestion on road segments efficiently. Here's an explanation of its structure and methods:
+# Key Features
+# 1:Hash Table Structure
+ # Size: Fixed size of 41 (prime number chosen to reduce collision chances).
+# Collision Handling: Uses linear probing to resolve collisions.
+# Road Data:
+# roadSegment: Name of the road.
+# vehicleCount: Number of vehicles currently on the road.
+# isOccupied: Indicates whether the hash table slot is occupied.
+Methods
+# 1. hashFunction(string roadSegment)
+# Purpose: Computes a hash index for the road segment.
+Logic:
+ # a)Sums the ASCII values of all characters in the road segment name.
+ # b)Computes the remainder when divided by TABLE_SIZE.
+Output: Returns an index between 0 and 40.  
+# 2. updateVehicleCount(string roadSegment, int count)
+# Purpose: Adds or updates the vehicle count for a given road segment.
+Logic:
+# Computes the hash index for the road segment.
+# Resolves collisions using linear probing:
+# Searches for an existing entry with the same road segment name.
+# Inserts the road segment into the first available empty slot if not found.
+# Updates the vehicle count:
+ # Adds the count to the existing vehicle count.
+ # Ensures the count is not negative (sets to 0 if it is).
+ # 3. displayCongestedRoads(int threshold)
+# Purpose: Identifies and displays road segments where vehicle counts exceed a given threshold.
+# Logic:
+ # Iterates through the hash table.
+ # Checks each occupied slot's vehicleCount against the threshold.
+ # Displays road segments exceeding the threshold.
+ 
+# 4. loadToHeap(MaxHeap &heap)
+ # Purpose: Transfers all occupied road segments and their vehicle counts to a MaxHeap for priority-based analysis.
+Logic:
+# Iterates through the hash table.
+# Inserts each occupied road segment into the MaxHeap using its insert() method.
+
 ## Module5: Emergency Vehicle Handling
-It first asks the user to input the start and end intersections for the emergency vehicle's route.
-These intersections are represented as characters (e.g., 'A', 'B').
+It first asks the user to input the start and end intersections for the emergency vehicle's route.These intersections are represented as characters (e.g., 'A', 'B').
+ The setupEmergencyVehicle method reads data from a CSV file containing details about emergency vehicles, including their unique IDs, starting points, destinations, and priority levels. Using a helper class, CSVReader, it dynamically allocates an array of EmergencyVehicle objects, populating their attributes with data from the CSV. The method ensures efficient memory usage by cleaning up temporary storage after processing. This setup allows the system to dynamically adapt to changes in emergency vehicle data and prioritize traffic routing based on vehicle priority levels
  # Convert to Uppercase:
 It ensures that both the start and end intersections are uppercase letters.
 If the user enters lowercase letters, the function converts them to uppercase by subtracting 32 from the ASCII value of the character.
